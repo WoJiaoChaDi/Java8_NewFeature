@@ -35,6 +35,11 @@ public class TestStreamApi_1 {
         //4.创建无限流
         //迭代
         Stream<Integer> stream4 = Stream.iterate(0, (x) -> x + 2);
-        stream4.forEach(System.out::println);
+        //stream4.forEach(System.out::println);
+        stream4.limit(20).forEach(System.out::println);
+
+        //生成
+        Stream<Double> stream5 = Stream.generate(() -> Math.random());
+        stream5.limit(5).forEach(System.out::println);
     }
 }
