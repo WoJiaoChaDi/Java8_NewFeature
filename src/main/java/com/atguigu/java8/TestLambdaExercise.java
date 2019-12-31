@@ -55,4 +55,16 @@ public class TestLambdaExercise {
         return myFunction.getValue(str);
     }
 
+    @Test
+    public void test3(){
+        opertion(100L, 200L, (x, y) -> x + y);
+
+        opertion(100L, 200L, (x, y) -> x * y);
+    }
+
+    //对两个Long 型数据进行处理
+    public void opertion(Long l1, Long l2, MyFunction2<Long, Long> myFunction2) {
+        System.out.println(myFunction2.getValue(l1, l2));
+    }
+
 }
