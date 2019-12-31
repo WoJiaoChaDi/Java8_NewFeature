@@ -43,13 +43,16 @@ import java.util.function.Consumer;
 * 上联：左右遇一括号省
 * 下联：左侧推断类型省
 * 横批：能省则省
+*
+* 二、Lambda 表达式需要“函数式接口”的支持
+* 函数式接口：接口中只有一个抽象方法的接口，称为函数式接口。可以使用注解@FunctionalInterface修饰来检查是否是函数式接口
 * */
 public class TestLambda {
 
     //语法格式一：无参数，无返回值
     //() -> System.out.println("Hello Lambda!");
     @Test
-    public void test1(){
+    public void test1() {
 
         //局部内部类中，使用了同级别局部变量时，必须是final变量
         int num = 0; //jdk1.7 以前，必须是final，但是本质上还是不能改变
@@ -69,7 +72,7 @@ public class TestLambda {
     //语法格式二：有一个参数，并且无返回值
     //   (x) -> System.out.println("Hello " + x);
     @Test
-    public void test2(){
+    public void test2() {
         Consumer<String> con = (x) -> System.out.println("Hello " + x);
         con.accept("World!");
     }
@@ -77,14 +80,14 @@ public class TestLambda {
     //语法格式三：若只有一个参数，小括号可以省略不写
     //       x -> System.out.println("Hello " + x);
     @Test
-    public void test3(){
+    public void test3() {
         Consumer<String> con = x -> System.out.println("Hello " + x);
         con.accept("World!");
     }
 
     //语法格式四：有两个以上的参数，有返回值，并且Lambda体内有多条语句
     @Test
-    public void test4(){
+    public void test4() {
         Comparator<Integer> com = (x, y) -> {
             System.out.println("函数式接口");
             return Integer.compare(x, y);
@@ -94,13 +97,20 @@ public class TestLambda {
     //语法格式五：若lambda 体重只有一条语句，return 和 大括号 都可以省略不写
     //       (x, y) -> Integer.compare(x, y);
     @Test
-    public void test5(){
+    public void test5() {
         Comparator<Integer> com = (x, y) -> Integer.compare(x, y);
     }
 
 
+    @Test
+    public void test6() {
+        Integer integer = operation(100, (x) -> x * x);
+        System.out.println(integer);
 
+        System.out.println(operation(200, (x) -> x + 200));
+    }
 
-
-
+    public Integer operation(Integer num, MyFun myFun) {
+        return myFun.getValue(num);
+    }
 }
