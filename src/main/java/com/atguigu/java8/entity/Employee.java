@@ -29,6 +29,14 @@ public class Employee {
         this.status = status;
     }
 
+    public Employee(int id, String name, int age, double salary, Status status) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+        this.salary = salary;
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }
