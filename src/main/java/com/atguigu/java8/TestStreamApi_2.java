@@ -13,12 +13,12 @@ public class TestStreamApi_2 {
 
     List<Employee> emps = Arrays.asList(
             new Employee("张三", 18, 3333.33),
-            new Employee("李四", 66, 5555.55),
+            new Employee("李四", 44, 5555.55),
+            new Employee("王五", 66, 9999.99),
             new Employee("王五", 44, 9999.99),
-            new Employee("王五", 44, 9999.99),
+            new Employee("赵六", 8, 8888.88),
             new Employee("赵六", 21, 8888.88),
-            new Employee("赵六", 21, 8888.88),
-            new Employee("田七", 8, 7777.77)
+            new Employee("田七", 21, 7777.77)
     );
 
     //中间操作：只有在进行终止操作的时候，才会执行
@@ -123,6 +123,32 @@ public class TestStreamApi_2 {
             list.add(ch);
         }
         return list.stream();
+    }
+
+    /*
+    * 排序：
+    *   sorted()——自然排序(Comparable)
+    *   sorted(Comparator com)——定制排序(Comparator)
+    * */
+    @Test
+    public void test6() {
+        List<String> list = Arrays.asList("ccc", "aaa", "eee", "bbb", "ddd");
+        list.stream()
+                .sorted()
+                .forEach(System.out::println);
+
+        System.out.println("--------------");
+
+        //先按照名字正序，再按照工资倒序
+        emps.stream()
+                .sorted((e1, e2) -> {
+                    if (e1.getAge() == e2.getAge()) {
+                        return e1.getName().compareTo(e2.getName());
+                    }else{
+                        return (int) (e2.getSalary() - e1.getSalary());
+                    }
+                })
+                .forEach(System.out::println);
     }
 
 }
