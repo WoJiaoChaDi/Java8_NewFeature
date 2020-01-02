@@ -158,6 +158,7 @@ public class TestStreamApi_2 {
     //3. 终止操作
 	/* 注意：流进行了终止操作后，不能再次使用
 	 *
+	 * 查找与匹配
 	 * allMatch——检查是否匹配所有元素
 	 * anyMatch——检查是否至少匹配一个元素
 	 * noneMatch——检查是否没有匹配的元素
