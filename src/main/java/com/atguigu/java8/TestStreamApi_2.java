@@ -7,10 +7,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TestStreamApi_2 {
@@ -256,6 +262,158 @@ public class TestStreamApi_2 {
                 .map(Employee::getSalary)
                 .reduce(Double::sum);
         System.out.println(reduce2.get());
+    }
+
+    //名字中出现“六”的次数
+    @Test
+    public void test9() {
+        Integer reduce = emps.stream()
+                .map(Employee::getName)
+                .flatMap((x) -> {
+                    List<Character> list = new ArrayList<>();
+                    char[] chars = x.toCharArray();
+                    for (Character aChar : chars) {
+                        list.add(aChar);
+                    }
+                    return list.stream();
+                }).map((x) -> {
+                    if (x.equals('六')) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }).reduce(0, (x, y) -> x + y);
+        System.out.println(reduce);
+    }
+
+    /*
+    * 收集
+    *   collect——将流转换为其他形式。接收一个 Collector接口的实现，用于给Stream中元素做汇总的方法
+    * */
+    @Test
+    public void test10() {
+        //收集到List中
+        System.out.println("收集到List中-----------------------------------");
+        List<String> collect = emps.stream()
+                .map(Employee::getName)
+                .collect(Collectors.toList());
+        System.out.println(collect);
+        System.out.println("-----------------------------------");
+
+        //收集到Set中
+        System.out.println("收集到Set中-----------------------------------");
+        Set<String> collect1 = emps.stream()
+                .map(Employee::getName)
+                .collect(Collectors.toSet());
+        System.out.println(collect1);
+        System.out.println("-----------------------------------");
+
+        //收集到特殊的集合中 Collector<? super T, A, R> collector
+        System.out.println("收集到特殊的集合中-----------------------------------");
+        emps.stream()
+                .map(Employee::getName)
+                .collect(Collectors.toCollection(HashSet::new));
+        System.out.println("-----------------------------------");
+
+        //收集总数
+        System.out.println("收集总数-----------------------------------");
+        Long count = emps.stream()
+                .collect(Collectors.counting());
+        System.out.println(count);
+        System.out.println("-----------------------------------");
+
+        //平均值
+        System.out.println("平均值-----------------------------------");
+        Double avg = emps.stream()
+                .collect(Collectors.averagingDouble(Employee::getSalary));
+        System.out.println(avg);
+        System.out.println("-----------------------------------");
+
+
+        //总和
+        System.out.println("总和-----------------------------------");
+        Double sum = emps.stream()
+                .collect(Collectors.summingDouble(Employee::getSalary));
+        System.out.println(sum);
+        System.out.println("-----------------------------------");
+
+        //工资的最大值的员工
+        System.out.println("工资的最大值的员工-----------------------------------");
+        Optional<Employee> maxSalary = emps.stream()
+                .collect(Collectors.maxBy((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary())));
+        System.out.println(maxSalary);
+        System.out.println("-----------------------------------");
+
+        //获取最小工资
+        System.out.println("获取最小工资-----------------------------------");
+        Optional<Double> minSalary = emps.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.minBy((e1, e2) -> Double.compare(e1, e2)));
+        System.out.println(minSalary);
+
+        Optional<Double> minSalary2 = emps.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.minBy(Double::compare));
+        System.out.println(minSalary2);
+
+        Optional<Double> minSalary3 = emps.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.minBy((e1, e2) -> e1.compareTo(e2)));
+        System.out.println(minSalary3);
+
+        Optional<Double> minSalary4 = emps.stream()
+                .map(Employee::getSalary)
+                .collect(Collectors.minBy(Double::compareTo));
+        System.out.println(minSalary4);
+        System.out.println("-----------------------------------");
+
+        //分组
+        System.out.println("分组-----------------------------------");
+        Map<Status, List<Employee>> map1 = emps.stream()
+                .collect(Collectors.groupingBy(Employee::getStatus));
+        System.out.println(map1);
+        System.out.println("-----------------------------------");
+
+        //多级分组
+        System.out.println("多级分组-----------------------------------");
+        Map<Status, Map<String, List<Employee>>> map2 = emps.stream()
+                .collect(Collectors.groupingBy(Employee::getStatus, Collectors.groupingBy((e) -> {
+                    if (e.getAge() <= 35) {
+                        return "青年";
+                    } else if (e.getAge() <= 50) {
+                        return "中年";
+                    } else {
+                        return "老年";
+                    }
+                })));
+        System.out.println(map2);
+        System.out.println("-----------------------------------");
+
+        //分片/分区
+        System.out.println("分片/分区-----------------------------------");
+        Map<Boolean, List<Employee>> map3 = emps.stream()
+                .collect(Collectors.partitioningBy((e) -> e.getSalary() > 8000));
+        System.out.println(map3);
+        System.out.println("-----------------------------------");
+
+        //大概视图
+        System.out.println("大概视图-----------------------------------");
+        DoubleSummaryStatistics summary = emps.stream()
+                .collect(Collectors.summarizingDouble(Employee::getSalary));
+        System.out.println(summary.getSum());
+        System.out.println(summary.getAverage());
+        System.out.println(summary.getCount());
+        System.out.println(summary.getMax());
+        System.out.println(summary.getMin());
+        System.out.println("-----------------------------------");
+
+        //连接
+        System.out.println("连接-----------------------------------");
+        String nameStr = emps.stream()
+                .map(Employee::getName)
+                .collect(Collectors.joining(",", "=首=  ", "  =尾="));
+        System.out.println(nameStr);
+
     }
 
 }
