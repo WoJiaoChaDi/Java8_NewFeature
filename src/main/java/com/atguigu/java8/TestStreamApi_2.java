@@ -1,24 +1,28 @@
 package com.atguigu.java8;
 
 import com.atguigu.java8.entity.Employee;
+import com.atguigu.java8.entity.Status;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class TestStreamApi_2 {
 
     List<Employee> emps = Arrays.asList(
-            new Employee("张三", 18, 3333.33),
-            new Employee("李四", 44, 5555.55),
-            new Employee("王五", 66, 9999.99),
-            new Employee("王五", 44, 9999.99),
-            new Employee("赵六", 8, 8888.88),
-            new Employee("赵六", 21, 8888.88),
-            new Employee("田七", 21, 7777.77)
+            new Employee("张三", 18, 9999.99, Status.BUSY),
+            new Employee("李四", 44, 5555.55, Status.FREE),
+            new Employee("王五", 66, 3333.33, Status.VACATION),
+            new Employee("王五", 44, 9999.99, Status.BUSY),
+            new Employee("赵六", 18, 8888.88, Status.BUSY),
+            new Employee("赵六", 21, 8888.88, Status.VACATION),
+            new Employee("田七", 21, 7777.77, Status.FREE)
     );
 
     //中间操作：只有在进行终止操作的时候，才会执行
@@ -150,5 +154,86 @@ public class TestStreamApi_2 {
                 })
                 .forEach(System.out::println);
     }
+
+    //3. 终止操作
+	/* 注意：流进行了终止操作后，不能再次使用
+	 *
+	 * allMatch——检查是否匹配所有元素
+	 * anyMatch——检查是否至少匹配一个元素
+	 * noneMatch——检查是否没有匹配的元素
+	 * findFirst——返回第一个元素
+	 * findAny——返回当前流中的任意元素
+	 * count——返回流中元素的总个数
+	 * max——返回流中最大值
+	 * min——返回流中最小值
+	 */
+    @Test
+    public void test7() {
+
+        //是否全都匹配 BUSY 状态
+        boolean b1 = emps.stream()
+                .allMatch((e) -> e.getStatus().equals(Status.BUSY));
+        System.out.println(b1);
+
+        //是否至少有一个匹配 BUSY 状态
+        boolean b2 = emps.stream()
+                .anyMatch((e) -> e.getStatus().equals(Status.BUSY));
+        System.out.println(b2);
+
+        //是否全部不匹配 OTHER 状态
+        boolean b3 = emps.stream()
+                .noneMatch((e) -> e.getStatus().equals(Status.OTHER));
+        System.out.println(b3);
+
+        //返回工资最高的第一个元素
+        Optional<Employee> first = emps.stream()
+                .sorted((e1, e2) -> Double.compare(e2.getSalary(), e1.getSalary()))
+                .findFirst();
+        System.out.println(first.get());
+
+        //返回任意一个元素,如果找不到就返回null
+        Employee any = emps.parallelStream()
+                .findAny().orElse(null);
+        System.out.println(any);
+
+        //返回流中元素的总个数
+        long count = emps.stream()
+                .count();
+        System.out.println(count);
+
+        //返回工资最大的员工
+        Optional<Employee> max = emps.stream()
+                .max((e1, e2) -> Double.compare(e1.getSalary(), e2.getSalary()));
+        System.out.println(max);
+
+        //返回工资中最小的工资是多少
+        Optional<Double> min = emps.stream()
+                .map(Employee::getSalary)
+                .min(Double::compareTo);
+
+        Optional<Double> min2 = emps.stream()
+                .map((e) -> e.getSalary())
+                .min((e1, e2) -> e1.compareTo(e2));
+
+        Optional<Double> min3 = emps.stream()
+                .map(new Function<Employee, Double>() {
+                    @Override
+                    public Double apply(Employee e) {
+                        return e.getSalary();
+                    }
+                })
+                .min(new Comparator<Double>() {
+                    @Override
+                    public int compare(Double o1, Double o2) {
+                        return o1.compareTo(o2);
+                    }
+                });
+
+        System.out.println("min:" + min.get() + "  min2:" + min2.get() + "  min3:" + min3.get());
+    }
+
+    /*
+    *
+    * */
 
 }
