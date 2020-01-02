@@ -234,7 +234,28 @@ public class TestStreamApi_2 {
     }
 
     /*
-    *
-    * */
+     * 归约
+     *   reduce(T identity, BinaryOperator) / reduce(BinaryOperator) ——可以将流中元素反复结合起来，得到一个值。
+     * */
+    @Test
+    public void test8() {
+        List<Integer> list = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        List<String> list2 = Arrays.asList("A", "B", "C", "D", "E", "F", "G");
+
+        //先把0作为起始值，然后把起始值0 作为x，1作为y，进行操作后把结果result作为x，2做为y ，一次递归下去
+        Integer reduce = list.stream()
+                .reduce(0, (x, y) -> x + y);
+        System.out.println(reduce);
+
+        String reduce1 = list2.stream()
+                .reduce("Start - ", (x, y) -> x + y);
+        System.out.println(reduce1);
+
+        //计算工资总和
+        Optional<Double> reduce2 = emps.stream()
+                .map(Employee::getSalary)
+                .reduce(Double::sum);
+        System.out.println(reduce2.get());
+    }
 
 }
