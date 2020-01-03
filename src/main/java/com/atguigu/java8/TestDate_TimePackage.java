@@ -2,15 +2,22 @@ package com.atguigu.java8;
 
 import org.junit.Test;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.OffsetDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+import java.util.Set;
 
 public class TestDate_TimePackage {
 
@@ -106,5 +113,110 @@ public class TestDate_TimePackage {
         //相差的总月份
         long chronoUnitMonth = ChronoUnit.MONTHS.between(ld1, ld2);
         System.out.println(chronoUnitMonth);
+    }
+
+    //TemporaAdjuster 时间矫正器
+    @Test
+    public void test4() {
+        LocalDateTime ldt = LocalDateTime.now();
+        System.out.println(ldt);
+
+        //将日期指定为10日
+        LocalDateTime ldt2 = ldt.withDayOfMonth(10);
+        System.out.println(ldt2);
+
+        //下个月中的第一天
+        LocalDateTime ldt3 = ldt.with(TemporalAdjusters.firstDayOfNextMonth());
+        System.out.println(ldt3);
+
+        //获取下一个周日
+        LocalDateTime ldt4 = ldt.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+        System.out.println(ldt4);
+
+        //自定义：获取下一个生日（2019-12-29）  (没有考虑闰年）
+        LocalDateTime ldt_temp = LocalDateTime.of(2020, 2, 27, 12, 12, 12);
+        LocalDateTime ldt5 = ldt_temp.with((adjuster) -> {
+            int b_month = 2;
+            int b_day = 28;
+
+            LocalDateTime ldt_tmp = (LocalDateTime) adjuster;
+            Month month_now = ldt_tmp.getMonth();
+            int month = b_month - month_now.getValue();
+            //如果生日月份 大于 当前月份
+            if (month > 0) {
+                //补充月份
+                ldt_tmp = ldt_tmp.plusMonths(month);
+
+                int dayOfMonth = ldt_tmp.getDayOfMonth();
+                int day = b_day - dayOfMonth;
+                //如果生日日期 大于 当前日期
+                if (day > 0) {
+                    //计算天数
+                    ldt_tmp = ldt_tmp.plusDays(day);
+                    return ldt_tmp;
+                } else {
+                    //计算天数
+                    ldt_tmp = ldt_tmp.plusDays(day);
+                    //补充一年
+                    ldt_tmp = ldt_tmp.plusYears(1);
+                    return ldt_tmp;
+                }
+            } else {
+                //排除月份为当月的情况
+                if(month != 0){
+                    //减去月份
+                    ldt_tmp = ldt_tmp.plusMonths(month);
+                    //补充一年
+                    ldt_tmp = ldt_tmp.plusYears(1);
+                }
+
+                int dayOfMonth = ldt_tmp.getDayOfMonth();
+                int day = b_day - dayOfMonth;
+                //计算天数
+                ldt_tmp = ldt_tmp.plusDays(day);
+                return ldt_tmp;
+            }
+        });
+        System.out.println(ldt5);
+    }
+
+    //DateTimeFormatter ： 格式化时间/日期
+    @Test
+    public void test5() {
+        LocalDateTime ldt = LocalDateTime.now();
+
+        //定义好的时间格式化
+        DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE;
+        String str1 = ldt.format(dtf);
+        System.out.println(str1);
+
+        //自定义时间格式化
+        DateTimeFormatter dtf2 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String str2 = ldt.format(dtf2);
+        System.out.println(str2);
+
+        //解析回LocalDateTime
+        LocalDateTime parseDateTime = LocalDateTime.parse("2020-01-03 11:22:22", dtf2);
+        System.out.println(parseDateTime);
+    }
+
+    //设置时区
+    //ZoneDate\ZonedTime\ZoneDateTime
+    @Test
+    public void test6() {
+        Set<String> availableZoneIds = ZoneId.getAvailableZoneIds();
+        availableZoneIds.stream()
+                .forEach(System.out::println);
+
+        //获取指定时区的时间
+        LocalDateTime now_Europe = LocalDateTime.now(ZoneId.of("Europe/Monaco"));
+        //2020-01-03T03:44:29.272   获取Europe/Monaco  这个地方的时间
+        System.out.println(now_Europe);
+
+        //带时区时差的时间
+        ZonedDateTime zonedDateTime = now_Europe.atZone(ZoneId.of("Europe/Monaco"));
+        //2020-01-03T03:44:29.272+01:00[Europe/Monaco]  跟UTC时间时差 +01:00 小时
+        System.out.println(zonedDateTime);
+
     }
 }
