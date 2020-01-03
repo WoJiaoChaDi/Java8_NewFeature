@@ -11,10 +11,11 @@ import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.TYPE_PARAMETER;
 
 //定义可重复注解
 @Repeatable(MyAnnotations.class)    //指定可重复注解的容器类
-@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE})
+@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MyAnnotation {
     String value() default "atguigu";
