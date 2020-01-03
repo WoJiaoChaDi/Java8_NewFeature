@@ -92,6 +92,17 @@ public class TestMethodRef {
         BiPredicate<String, String> biPredicate = (x, y) -> x.equals(y);
 
         BiPredicate<String, String> biPredicate1 = String::equals;
+
+        //类::实例方法  第一个参数是对象，后面的参数都是
+        MyInterface_3<String, String, String> my = String::replaceAll;
+        //上面的语句等同于下面的语句
+        //MyInterface_3<String, String, String> my = (x, y, z) -> x.replaceAll(y, z);
+        String result = my.test("abcdefg","e","pppp");
+        System.out.println(result);
+    }
+
+    public interface MyInterface_3<T,U,F> {
+        T test(T x, U y, F z);
     }
 
     //构造器引用
