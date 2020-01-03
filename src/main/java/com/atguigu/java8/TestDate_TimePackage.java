@@ -68,9 +68,10 @@ public class TestDate_TimePackage {
         System.out.println(ins2);
     }
 
-    //3.
-    //Duration ： 计算两个时间之间的间隔
-    //Period   ： 计算两个日期之间的间隔
+    //3.计算时间的间隔
+    //Duration  ：   计算两个时间之间的间隔
+    //Period    ：   计算两个日期之间的间隔
+    //ChronoUnit：   计算两个日期时间相差的总间隔
     @Test
     public void test3() throws InterruptedException {
         Instant ins1 = Instant.now();
@@ -105,6 +106,5 @@ public class TestDate_TimePackage {
         //相差的总月份
         long chronoUnitMonth = ChronoUnit.MONTHS.between(ld1, ld2);
         System.out.println(chronoUnitMonth);
-
     }
 }
