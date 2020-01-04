@@ -389,7 +389,7 @@ public class TestStreamApi_2 {
         System.out.println(map2);
         System.out.println("-----------------------------------");
 
-        //分片/分区
+        //分片/分区(false 和 true 分成两组)
         System.out.println("分片/分区-----------------------------------");
         Map<Boolean, List<Employee>> map3 = emps.stream()
                 .collect(Collectors.partitioningBy((e) -> e.getSalary() > 8000));
