@@ -123,6 +123,34 @@ public class TestStreamApi_2 {
         Stream<Character> stream1 = list.stream()
                 .flatMap(TestStreamApi_2::filterCharacter);
         stream1.forEach(System.out::println);
+        System.out.println("------------------------------------");
+
+
+        String str1 = "111,22,3,4,55,6,7,88,9";
+        String str2 = "aaa,bbb,c,dd,eee,ff,gg,hh,jj";
+        //map 是将返回的内容当作一个一个stream，然后将 一个一个stream当作数组的内容放入
+        //下面的代码运行过程（个人理解）
+        // Stream<String>   str1.stream         str2.stream
+        // Stream<String[]> str1.split.stream   str2.split.stream
+        // List<String[]>   str1.split          str2.split
+        // 所以map后，得到的是map返回值  Stream<Stream<String>>
+        List<String[]> s_map = Stream.of(str1, str2)
+                .map((x) -> x.split(","))
+                .collect(Collectors.toList());
+        System.out.println(s_map);
+
+        //flapMap 是将返回的内容当一个一个stream，然后将这些stream拆分成子项，再把子项首位相连，组成一个整体的stream
+        //下面代码运行过程（个人理解）
+        // Stream<String>   str1.stream                 str2.stream
+        // Stream<String>   str1.split.forEach.stream + str2.split.forEach.stream
+        // List<String      str1.split.forEach        + str2.split.forEach
+        // 所以，flatMap后，得到的是flatMap中，返回值的可拆分的子项  Stream<String>
+        List<String> s_flapMap = Stream.of(str1, str2)
+                .flatMap((x) -> Arrays.stream(x.split(",")))
+                .collect(Collectors.toList());
+        System.out.println(s_flapMap);
+
+        System.out.println("------------------------------------");
     }
 
     //字符串转换成流
