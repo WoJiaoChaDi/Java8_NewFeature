@@ -143,7 +143,7 @@ public class TestStreamApi_2 {
         //下面代码运行过程（个人理解）
         // Stream<String>   str1.stream                 str2.stream
         // Stream<String>   str1.split.forEach.stream + str2.split.forEach.stream
-        // List<String      str1.split.forEach        + str2.split.forEach
+        // List<String>     str1.split.forEach        + str2.split.forEach
         // 所以，flatMap后，得到的是flatMap中，返回值的可拆分的子项  Stream<String>
         List<String> s_flapMap = Stream.of(str1, str2)
                 .flatMap((x) -> Arrays.stream(x.split(",")))
