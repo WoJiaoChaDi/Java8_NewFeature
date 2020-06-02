@@ -8,17 +8,21 @@ public class NewMan {
     private Optional<Godness> godness = Optional.empty();
 
     public NewMan() {
+        System.out.println("NewMan newMan()...");
     }
 
     public NewMan(Optional<Godness> godness) {
+        System.out.println("NewMan newMan(Optional<Godness> godness)...");
         this.godness = godness;
     }
 
     public Optional<Godness> getGodness() {
+        System.out.println("NewMan getGodness()...");
         return godness;
     }
 
     public void setGodness(Optional<Godness> godness) {
+        System.out.println("NewMan setGodness(Optional<Godness> godness)...");
         this.godness = godness;
     }
 

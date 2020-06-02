@@ -6,17 +6,21 @@ public class Godness {
     private String name;
 
     public Godness() {
+        System.out.println("Godness new Godness()...");
     }
 
     public Godness(String name) {
+        System.out.println("Godness new Godness(String name)...");
         this.name = name;
     }
 
     public String getName() {
+        System.out.println("Godness getName()...");
         return name;
     }
 
     public void setName(String name) {
+        System.out.println("Godness setName(String name)...");
         this.name = name;
     }
 

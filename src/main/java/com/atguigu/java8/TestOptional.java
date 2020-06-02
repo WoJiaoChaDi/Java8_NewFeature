@@ -75,21 +75,30 @@ public class TestOptional {
         Man man = new Man();
         String godnessName = getGodnessName(man);
         System.out.println(godnessName);
-        System.out.println("--------------");
+        System.out.println("--------------\n");
 
+        //下面四种情况，其实在调用getGodNessName2(Man man)的时候，里面的每个orElse里面的创建都想都创建了的，区别是有没有使用
         Optional<NewMan> newMan = Optional.ofNullable(null);
+        System.out.println("--1");
         System.out.println(getGodnessName2(newMan));
+        System.out.println("--------------\n");
 
         Optional<NewMan> newMan2 = Optional.ofNullable(new NewMan());
+        System.out.println("--2");
         System.out.println(getGodnessName2(newMan2));
+        System.out.println("--------------\n");
 
         Optional<Godness> gn = Optional.ofNullable(null);
         Optional<NewMan> newMan3 = Optional.ofNullable(new NewMan(gn));
+        System.out.println("--3");
         System.out.println(getGodnessName2(newMan3));
+        System.out.println("--------------\n");
 
         Optional<Godness> gn1 = Optional.ofNullable(new Godness("存在"));
         Optional<NewMan> newMan4 = Optional.ofNullable(new NewMan(gn1));
+        System.out.println("--4");
         System.out.println(getGodnessName2(newMan4));
+        System.out.println("--------------\n");
     }
 
     public String getGodnessName(Man man) {
