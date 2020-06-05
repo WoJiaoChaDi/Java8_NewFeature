@@ -26,7 +26,7 @@ public class TestDatePackage {
         Date date0 = new Date();
         printDate(date0);
 
-        //年月不是很方便，所以过时过期
+        //年月不是很方便，年是从1900开始的，月份是 0-11 ，对于入来说不是很直观。所以过时过期
         Date date1 = new Date(1, 11, 30, 14, 59, 59);
         printDate(date1);
 

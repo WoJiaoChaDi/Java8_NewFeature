@@ -41,6 +41,7 @@ public class TestDate_TimePackage {
         ldt2_new = ldt2_new.minusHours(15);
         ldt2_new = ldt2_new.minusMinutes(50);
         ldt2_new = ldt2_new.minusSeconds(35);
+        //上面统一加减后的日期时间，如果单位超出了当前单位的最大值，则进1。比如 06:30 - 35分钟 = 05:55
         System.out.println(ldt2_new);
 
         //获取年月日时分秒，获取的月份是实际数字
@@ -86,6 +87,7 @@ public class TestDate_TimePackage {
         Instant ins2 = Instant.now();
 
         Duration duration1 = Duration.between(ins1, ins2);
+        //1000
         System.out.println(duration1.toMillis());
         System.out.println("--------------");
 
@@ -94,6 +96,7 @@ public class TestDate_TimePackage {
         LocalTime lt2 = LocalTime.now();
 
         Duration duration2 = Duration.between(lt1, lt2);
+        //1000
         System.out.println(duration2.toMillis());
         System.out.println("--------------");
 
@@ -101,8 +104,11 @@ public class TestDate_TimePackage {
         LocalDate ld1 = LocalDate.of(1991,12,29);
         LocalDate ld2 = LocalDate.now();
         Period period = Period.between(ld1, ld2);
+        //4
         System.out.println(period.getDays());//月份中相差的天数
+        //5
         System.out.println(period.getMonths());//相差的月份
+        //8
         System.out.println(period.getYears());//相差的年份
         System.out.println("--------------");
 
